@@ -35,6 +35,8 @@ EC2_SSH_PRIVATE_KEY=$3
 
 #make sure this matches the CHEF_FILE_CACHE_PATH in `bootstrap.sh`
 CHEF_FILE_CACHE_PATH=/tmp/cheftime
+CHEF_COOKBOOK_PATH=/tmp/cheftime/cookbooks
+CHEF_LOCAL_COOKBOOK_PATH=/tmp/cheftime/cookbooks-src
 
 #Upload Chefile and dna.json to directory (need to use sudo to copy over to $CHEF_FILE_CACHE_PATH and run chef)
 echo "Uploading Cheffile and dna.json"
@@ -100,6 +102,20 @@ echo "$INSTANCE has librarian-chef installed"
 #Okay, run it.
 echo "Run librarian-chef and chef-solo, this can take a while"
 
+echo "file_cache_path \"$CHEF_FILE_CACHE_PATH\"
+  cookbook_path [\"$CHEF_COOKBOOK_PATH\", \"$CHEF_LOCAL_COOKBOOK_PATH\"]
+  role_path []
+  log_level :info" > /tmp/solo.rb
+scp -q -i $EC2_SSH_PRIVATE_KEY -r -P $PORT \
+  /tmp/solo.rb \
+  $USERNAME@$IP:.
+
+eval "ssh -q -t -p \"$PORT\" -l \"$USERNAME\" -i \"$EC2_SSH_PRIVATE_KEY\" $USERNAME@$IP \"sudo -i sh -c ' \
+  mkdir -p $CHEF_FILE_CACHE_PATH \
+  mkdir -p $CHEF_COOKBOOK_PATH \
+  mkdir -p $CHEF_LOCAL_COOKBOOK_PATH \
+'\""
+
 if [ -d $LOCAL_COOKBOOKS ]; then
   eval "ssh -q -t -p \"$PORT\" -l \"$USERNAME\" -i \"$EC2_SSH_PRIVATE_KEY\" $USERNAME@$IP \"sudo -i sh -c 'cd $CHEF_FILE_CACHE_PATH && \
   cp -r /home/$USERNAME/cookbooks-src .'\""
@@ -110,8 +126,9 @@ mkdir -p /root/.ssh && \
 mv /home/ubuntu/.ssh/id_rsa /root/.ssh/id_rsa && \
 chmod 600 /root/.ssh/id_rsa && \
 chown root:root /root/.ssh/id_rsa && \
-cp -r /home/$USERNAME/Cheffile . && \
-cp -r /home/$USERNAME/dna.json . && \
+cp /home/$USERNAME/Cheffile . && \
+cp /home/$USERNAME/dna.json . && \
+cp /home/$USERNAME/solo.rb . && \
 librarian-chef install && \
 chef-solo -c $CHEF_FILE_CACHE_PATH/solo.rb -j dna.json'\""
 
