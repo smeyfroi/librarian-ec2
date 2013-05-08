@@ -73,10 +73,10 @@ while [ $OVER != 1 ] && [ $TESTS -lt $MAX_TESTS ]; do
   fi
 done
 if [ $TESTS = $MAX_TESTS ]; then
-    echo "${INSTANCE} never got chef-solo installed" 1>&2
+    echo "${IP} never got chef-solo installed" 1>&2
     exit 1
 fi
-echo "$INSTANCE has chef-solo installed"
+echo "$IP has chef-solo installed"
 
 OVER=0
 TESTS=0
@@ -94,10 +94,10 @@ while [ $OVER != 1 ] && [ $TESTS -lt $MAX_TESTS ]; do
   fi
 done
 if [ $TESTS = $MAX_TESTS ]; then
-    echo "${INSTANCE} never got librarian-chef installed" 1>&2
+    echo "${IP} never got librarian-chef installed" 1>&2
     exit 1
 fi
-echo "$INSTANCE has librarian-chef installed"
+echo "$IP has librarian-chef installed"
 
 #Okay, run it.
 echo "Run librarian-chef and chef-solo, this can take a while"
