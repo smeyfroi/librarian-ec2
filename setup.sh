@@ -133,5 +133,3 @@ librarian-chef install && \
 chef-solo -c $CHEF_FILE_CACHE_PATH/solo.rb -j dna.json'\""
 
 echo "Done!"
-
-exit
