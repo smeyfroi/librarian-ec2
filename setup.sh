@@ -64,7 +64,7 @@ while [ $OVER != 1 ] && [ $TESTS -lt $MAX_TESTS ]; do
   (ssh -q -t -p "$PORT" -o "StrictHostKeyChecking no" \
     -i $EC2_SSH_PRIVATE_KEY \
     $USERNAME@$IP \
-    "which chef-solo > /dev/null")
+    "ls /opt/chef/bin/chef-solo > /dev/null")
   if [ "$?" -ne "0" ] ; then
     TESTS=$(echo $TESTS+1 | bc)
     sleep $SLEEP_BETWEEN_TESTS
@@ -85,7 +85,7 @@ while [ $OVER != 1 ] && [ $TESTS -lt $MAX_TESTS ]; do
   (ssh -q -t -p "$PORT" -o "StrictHostKeyChecking no" \
     -i $EC2_SSH_PRIVATE_KEY \
     $USERNAME@$IP \
-    "which librarian-chef > /dev/null")
+    "ls /opt/chef/embedded/bin/librarian-chef > /dev/null")
   if [ "$?" -ne "0" ] ; then
     TESTS=$(echo $TESTS+1 | bc)
     sleep $SLEEP_BETWEEN_TESTS
@@ -129,7 +129,7 @@ chown root:root /root/.ssh/id_rsa && \
 cp /home/$USERNAME/Cheffile . && \
 cp /home/$USERNAME/dna.json . && \
 cp /home/$USERNAME/solo.rb . && \
-librarian-chef install && \
-chef-solo -c $CHEF_FILE_CACHE_PATH/solo.rb -j dna.json'\""
+/opt/chef/embedded/bin/librarian-chef install && \
+/opt/chef/bin/chef-solo -c $CHEF_FILE_CACHE_PATH/solo.rb -j dna.json'\""
 
 echo "Done!"
