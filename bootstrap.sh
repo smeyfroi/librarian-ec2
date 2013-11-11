@@ -8,5 +8,5 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get --no-install-recommends -y install build-essential ruby1.9.1-full libopenssl-ruby git-core
 
-curl -L https://www.opscode.com/chef/install.sh | sudo bash -s -- -v 11.6.0
+curl -L https://www.opscode.com/chef/install.sh | sudo bash -s -- -v 11.8.0
 /opt/chef/embedded/bin/gem install --no-rdoc --no-ri librarian-chef --version=0.0.1
