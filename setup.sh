@@ -15,7 +15,7 @@ fi
 #Run vagrant to create dna.json
 echo "Making dna.json"
 eval "cd \"$2\" && \
-      vagrant > /dev/null && \
+      vagrant > /dev/null || true && \
       cd -"
 
 #Try to match and extract a port provided to the script
