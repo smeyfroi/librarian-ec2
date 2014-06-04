@@ -11,7 +11,6 @@ then
   exit 1
 fi
 
-
 #Run vagrant to create dna.json
 echo "Making dna.json"
 eval "cd \"$2\" && \
@@ -27,7 +26,6 @@ if [ "$IP" == "$PORT" ] ; then
 fi
 
 USERNAME=ubuntu
-CHEFFILE=$2/Cheffile
 DNA=$2/dna.json
 
 EC2_SSH_PRIVATE_KEY=$3
@@ -37,13 +35,13 @@ CHEF_FILE_CACHE_PATH=/tmp/cheftime
 CHEF_COOKBOOK_PATH=/tmp/cheftime/cookbooks
 
 #Upload Chefile and dna.json to directory (need to use sudo to copy over to $CHEF_FILE_CACHE_PATH and run chef)
-echo "Uploading Cheffile and dna.json"
+echo "Uploading dna.json"
 scp -q -i $EC2_SSH_PRIVATE_KEY -r -P $PORT \
-  $CHEFFILE \
   $DNA \
   $USERNAME@$IP:.
 
 # Upload a berks package of all our cookbooks
+echo "Uploading cookbooks"
 berks package /tmp/cookbooks.tgz
 scp -q -i $EC2_SSH_PRIVATE_KEY -r -P $PORT \
   /tmp/cookbooks.tgz \
@@ -95,7 +93,6 @@ mkdir -p /root/.ssh && \
 cp /home/ubuntu/.ssh/id_rsa /root/.ssh/id_rsa && \
 chmod 600 /root/.ssh/id_rsa && \
 chown root:root /root/.ssh/id_rsa && \
-cp /home/$USERNAME/Cheffile . && \
 cp /home/$USERNAME/dna.json . && \
 cp /home/$USERNAME/solo.rb . && \
 cp /home/$USERNAME/cookbooks.tgz . && \
