@@ -41,8 +41,8 @@ scp -q -i $EC2_SSH_PRIVATE_KEY -r -P $PORT \
   $USERNAME@$IP:.
 
 # Upload a berks package of all our cookbooks
+eval "cd $2 && berks package /tmp/cookbooks.tgz"
 echo "Uploading cookbooks"
-berks package /tmp/cookbooks.tgz
 scp -q -i $EC2_SSH_PRIVATE_KEY -r -P $PORT \
   /tmp/cookbooks.tgz \
   $USERNAME@$IP:.
@@ -85,7 +85,7 @@ scp -q -i $EC2_SSH_PRIVATE_KEY -r -P $PORT \
   $USERNAME@$IP:.
 
 eval "ssh -q -t -p \"$PORT\" -o \"StrictHostKeyChecking no\" -l \"$USERNAME\" -i \"$EC2_SSH_PRIVATE_KEY\" $USERNAME@$IP \"sudo -i sh -c ' \
-mkdir -p $CHEF_FILE_CACHE_PATH \
+mkdir -p $CHEF_FILE_CACHE_PATH && \
 cd $CHEF_FILE_CACHE_PATH && \
 mkdir -p /root/.ssh && \
 cp /home/ubuntu/.ssh/id_rsa /root/.ssh/id_rsa && \
@@ -93,7 +93,7 @@ chmod 600 /root/.ssh/id_rsa && \
 chown root:root /root/.ssh/id_rsa && \
 cp /home/$USERNAME/dna.json . && \
 cp /home/$USERNAME/solo.rb . && \
-cp /home/$USERNAME/cookbooks.tgz . && \
+mv /home/$USERNAME/cookbooks.tgz . && \
 tar xzf cookbooks.tgz && \
 /opt/chef/bin/chef-solo -c $CHEF_FILE_CACHE_PATH/solo.rb -j dna.json'\""
 
