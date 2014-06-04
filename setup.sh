@@ -85,10 +85,8 @@ scp -q -i $EC2_SSH_PRIVATE_KEY -r -P $PORT \
   $USERNAME@$IP:.
 
 eval "ssh -q -t -p \"$PORT\" -o \"StrictHostKeyChecking no\" -l \"$USERNAME\" -i \"$EC2_SSH_PRIVATE_KEY\" $USERNAME@$IP \"sudo -i sh -c ' \
-  mkdir -p $CHEF_FILE_CACHE_PATH \
-'\""
-
-eval "ssh -q -t -p \"$PORT\" -o \"StrictHostKeyChecking no\" -l \"$USERNAME\" -i \"$EC2_SSH_PRIVATE_KEY\" $USERNAME@$IP \"sudo -i sh -c 'cd $CHEF_FILE_CACHE_PATH && \
+mkdir -p $CHEF_FILE_CACHE_PATH \
+cd $CHEF_FILE_CACHE_PATH && \
 mkdir -p /root/.ssh && \
 cp /home/ubuntu/.ssh/id_rsa /root/.ssh/id_rsa && \
 chmod 600 /root/.ssh/id_rsa && \
