@@ -7,4 +7,4 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get update
 
-curl -L https://www.opscode.com/chef/install.sh | sudo bash -s -- -v 11.16
+curl -L https://www.opscode.com/chef/install.sh | sudo bash -s -- -v ${CHEF_VERSION}
